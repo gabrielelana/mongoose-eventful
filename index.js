@@ -47,14 +47,7 @@ module.exports = function(schema, options) {
       checkIfVirtualFieldsAreChanged(this, model)
     }
 
-    if (this.isNew && options.emitChangedOnVirtualFields) {
-      this.$__.virtualFieldsPreviousValue = this.$__.virtualFieldsPreviousValue || {}
-
-      for (index in options.emitChangedOnVirtualFields) {
-        virtualFieldPath = options.emitChangedOnVirtualFields[index]
-        this.$__.virtualFieldsPreviousValue[virtualFieldPath] = this.get(virtualFieldPath)
-      }
-    }
+    rememberInitialValueOfVirtualFields(this)
 
     if (this.isNew) {
       model.emit('created', this)
@@ -78,6 +71,17 @@ module.exports = function(schema, options) {
         if (!_.isEqual(previousVirtualFieldValue, doc.get(virtualFieldPath))) {
           model.emit('changed:' + virtualFieldPath, doc)
         }
+      }
+    }
+  }
+
+  function rememberInitialValueOfVirtualFields(doc) {
+    if (doc.isNew && options.emitChangedOnVirtualFields) {
+      doc.$__.virtualFieldsPreviousValue = doc.$__.virtualFieldsPreviousValue || {}
+
+      for (var index in options.emitChangedOnVirtualFields) {
+        var virtualFieldPath = options.emitChangedOnVirtualFields[index]
+        doc.$__.virtualFieldsPreviousValue[virtualFieldPath] = doc.get(virtualFieldPath)
       }
     }
   }
