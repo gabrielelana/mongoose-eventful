@@ -44,18 +44,7 @@ module.exports = function(schema, options) {
         }
       }
 
-      if (options.emitChangedOnVirtualFields) {
-        this.$__.virtualFieldsPreviousValue = this.$__.virtualFieldsPreviousValue || {}
-
-        for (index in options.emitChangedOnVirtualFields) {
-          virtualFieldPath = options.emitChangedOnVirtualFields[index]
-          var previousVirtualFieldValue = this.$__.virtualFieldsPreviousValue[virtualFieldPath]
-
-          if (!_.isEqual(previousVirtualFieldValue, this.get(virtualFieldPath))) {
-            model.emit('changed:' + virtualFieldPath, this)
-          }
-        }
-      }
+      checkIfVirtualFieldsAreChanged(this, model)
     }
 
     if (this.isNew && options.emitChangedOnVirtualFields) {
@@ -77,4 +66,19 @@ module.exports = function(schema, options) {
   schema.post('remove', function() {
     this.model(this.constructor.modelName).emit('removed', this)
   });
+
+  function checkIfVirtualFieldsAreChanged(doc, model) {
+    if (options.emitChangedOnVirtualFields) {
+      doc.$__.virtualFieldsPreviousValue = doc.$__.virtualFieldsPreviousValue || {}
+
+      for (var index in options.emitChangedOnVirtualFields) {
+        var virtualFieldPath = options.emitChangedOnVirtualFields[index]
+        var previousVirtualFieldValue = doc.$__.virtualFieldsPreviousValue[virtualFieldPath]
+
+        if (!_.isEqual(previousVirtualFieldValue, doc.get(virtualFieldPath))) {
+          model.emit('changed:' + virtualFieldPath, doc)
+        }
+      }
+    }
+  }
 }
