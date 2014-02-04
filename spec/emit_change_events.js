@@ -58,7 +58,7 @@ describe('Model with mongoose-eventful plugin', function() {
     })
   })
 
-  describe('with emitChangedOnCreated option is true', function() {
+  describe('when emitChangedOnCreated option is true', function() {
     before(function() {
       this.EventfulSchema = new mongoose.Schema({}).plugin(eventful, {emitChangedOnCreated: true})
       this.EventfulModel = mongoose.model('EventfulModelWithEmitChangeOnCreatedOption', this.EventfulSchema)
@@ -116,8 +116,58 @@ describe('Model with mongoose-eventful plugin', function() {
     })
   })
 
+  describe('with a virtual field', function() {
+    describe('when emitChangedOnVirtualFields option is a list of virtual field paths', function() {
+      before(function() {
+        this.EventfulSchema = new mongoose.Schema(
+          {aField: 'string', aSecondField: 'string'}
+        )
+        this.EventfulSchema.plugin(eventful, {emitChangedOnVirtualFields: 'aVirtualField'})
+        this.EventfulSchema.virtual('aVirtualField').get(function() {
+          return this.aField
+        })
+        this.EventfulModel = mongoose.model('EventfulModelWithVirtualField', this.EventfulSchema)
+      })
+
+      it('emits change:<VirtualFieldName> when the virtual field is changed', function(done) {
+        this.EventfulModel.on('changed:aVirtualField', function(doc) {
+          expect(doc.aVirtualField).to.eql('changed value')
+          done()
+        })
+        this.EventfulModel.create({aField: 'initial value', aSecondField: 'initial value'}, function(err, doc) {
+          doc.set('aField', 'changed value')
+          doc.save()
+        })
+      })
+
+      it('emits change:<VirtualFieldName> when related field is changed directly', function(done) {
+        this.EventfulModel.on('changed:aVirtualField', function(doc) {
+          expect(doc.aVirtualField).to.eql('changed value')
+          done()
+        })
+        this.EventfulModel.create({aField: 'initial value', aSecondField: 'initial value'}, function(err, doc) {
+          doc.aField = 'changed value'
+          doc.save()
+        })
+      })
+
+      it('doesn\'t emit change:<VirtualFieldName> if the virtual field is not changed', function(done) {
+        var callOnChanged = sinon.spy()
+        this.EventfulModel.on('changed:aVirtualField', callOnChanged)
+        this.EventfulModel.create({aField: 'initial value', aSecondField: 'initial value'}, function(err, doc) {
+          doc.set('aSecondField', 'changed value')
+          doc.save(function() {
+            expect(callOnChanged).to.not.have.been.called
+            done()
+          })
+        })
+      })
+    })
+  })
+
   afterEach(function() {
     this.EventfulModel.removeAllListeners('changed')
     this.EventfulModel.removeAllListeners('changed:aSimpleField')
+    this.EventfulModel.removeAllListeners('changed:aVirtualField')
   })
 })
