@@ -29,7 +29,7 @@ module.exports = function(schema, options) {
     var fieldsThatHaveChanged = this.modifiedPaths(),
         model = this.model(this.constructor.modelName),
         alreadyEmitted = {},
-        index
+        index, virtualFieldPath
 
     var shouldEmitChangedWhenCreated = (!this.isNew || (this.isNew && options.emitChangedOnCreated))
 
@@ -46,14 +46,24 @@ module.exports = function(schema, options) {
 
       if (options.emitChangedOnVirtualFields) {
         this.$__.virtualFieldsPreviousValue = this.$__.virtualFieldsPreviousValue || {}
+
         for (index in options.emitChangedOnVirtualFields) {
-          var virtualFieldPath = options.emitChangedOnVirtualFields[index],
-              previousVirtualFieldValue = this.$__.virtualFieldsPreviousValue[virtualFieldPath]
+          virtualFieldPath = options.emitChangedOnVirtualFields[index]
+          var previousVirtualFieldValue = this.$__.virtualFieldsPreviousValue[virtualFieldPath]
 
           if (!_.isEqual(previousVirtualFieldValue, this.get(virtualFieldPath))) {
             model.emit('changed:' + virtualFieldPath, this)
           }
         }
+      }
+    }
+
+    if (this.isNew && options.emitChangedOnVirtualFields) {
+      this.$__.virtualFieldsPreviousValue = this.$__.virtualFieldsPreviousValue || {}
+
+      for (index in options.emitChangedOnVirtualFields) {
+        virtualFieldPath = options.emitChangedOnVirtualFields[index]
+        this.$__.virtualFieldsPreviousValue[virtualFieldPath] = this.get(virtualFieldPath)
       }
     }
 
