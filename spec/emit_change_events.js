@@ -162,6 +162,17 @@ describe('Model with mongoose-eventful plugin', function() {
           })
         })
       })
+
+      it('doen\'t emit changed:<VirtualFieldName> if nothing changed', function(done) {
+        var callOnChanged = sinon.spy()
+        this.EventfulModel.on('changed:aVirtualField', callOnChanged)
+        this.EventfulModel.create({}, function(err, doc) {
+          doc.save(function() {
+            expect(callOnChanged).to.not.have.been.called
+            done()
+          })
+        })
+      })
     })
   })
 

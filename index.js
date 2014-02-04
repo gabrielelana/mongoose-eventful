@@ -44,12 +44,15 @@ module.exports = function(schema, options) {
         }
       }
 
-      for (index in options.emitChangedOnVirtualFields) {
-        var virtualFieldPath = options.emitChangedOnVirtualFields[index],
-            previousVirtualFieldValue = this.$__.virtualFieldsPreviousValue[virtualFieldPath]
+      if (options.emitChangedOnVirtualFields) {
+        this.$__.virtualFieldsPreviousValue = this.$__.virtualFieldsPreviousValue || {}
+        for (index in options.emitChangedOnVirtualFields) {
+          var virtualFieldPath = options.emitChangedOnVirtualFields[index],
+              previousVirtualFieldValue = this.$__.virtualFieldsPreviousValue[virtualFieldPath]
 
-        if (!_.isEqual(previousVirtualFieldValue, this.get(virtualFieldPath))) {
-          model.emit('changed:' + virtualFieldPath, this)
+          if (!_.isEqual(previousVirtualFieldValue, this.get(virtualFieldPath))) {
+            model.emit('changed:' + virtualFieldPath, this)
+          }
         }
       }
     }
