@@ -140,7 +140,7 @@ describe('Model with mongoose-eventful plugin', function() {
         })
       })
 
-      it('emits change:<VirtualFieldName> when related field is changed directly', function(done) {
+      it('emits change:<VirtualFieldName> when dependent field is changed directly', function(done) {
         this.EventfulModel.on('changed:aVirtualField', function(doc) {
           expect(doc.aVirtualField).to.eql('changed value')
           done()
