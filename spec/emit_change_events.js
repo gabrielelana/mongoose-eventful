@@ -38,6 +38,17 @@ describe('Model with mongoose-eventful plugin', function() {
     })
   })
 
+  it('emits removed when document is removed', function(done) {
+    var callOnRemoved = sinon.spy()
+    this.EventfulModel.on('removed', callOnRemoved)
+    this.EventfulModel.create({}, function(err, doc) {
+      doc.remove(function(err) {
+        expect(callOnRemoved).to.have.been.called
+        done()
+      })
+    })
+  })
+
   it('doesn\'t emit changed when document is created', function(done) {
     var callOnChanged = sinon.spy()
     this.EventfulModel.on('changed', callOnChanged)
