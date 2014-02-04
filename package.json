@@ -1,7 +1,7 @@
 {
   "name": "mongoose-eventful",
   "version": "0.1.0",
-  "description": "Mongoose plugin to emit events when documents are created, updated and when fields are changed",
+  "description": "Mongoose plugin to emit events when documents are created or removed and when fields are changed",
   "main": "index.js",
   "scripts": {
     "test": "mocha --recursive --reporter=spec --colors spec"
