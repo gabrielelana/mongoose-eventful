@@ -44,9 +44,8 @@ module.exports = function(schema, options) {
         }
       })
 
-      checkIfVirtualFieldsAreChanged(doc, model)
+      checkIfVirtualFieldsHaveChanged(doc, model)
     }
-
     rememberInitialValueOfVirtualFields(doc)
 
     if (doc.isNew) {
@@ -60,7 +59,7 @@ module.exports = function(schema, options) {
     this.model(this.constructor.modelName).emit('removed', this)
   });
 
-  function checkIfVirtualFieldsAreChanged(doc, model) {
+  function checkIfVirtualFieldsHaveChanged(doc, model) {
     if (options.emitChangedOnVirtualFields) {
       doc.$__.virtualFieldsPreviousValue = doc.$__.virtualFieldsPreviousValue || {}
 
