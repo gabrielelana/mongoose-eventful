@@ -1,5 +1,5 @@
 # What
-Mongoose plugin to emit events when documents are created, removed and when fields are changed
+Mongoose plugin to emit events when documents are created or removed and when fields are changed
 
 # Install
 `npm install mongoose-eventful`

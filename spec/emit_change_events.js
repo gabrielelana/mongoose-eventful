@@ -129,7 +129,7 @@ describe('Model with mongoose-eventful plugin', function() {
         this.EventfulModel = mongoose.model('EventfulModelWithVirtualField', this.EventfulSchema)
       })
 
-      it('emits change:<VirtualFieldName> when the virtual field is changed', function(done) {
+      it('emits changed:<VirtualFieldName> when the virtual field is changed', function(done) {
         this.EventfulModel.on('changed:aVirtualField', function(doc) {
           expect(doc.aVirtualField).to.eql('changed value')
           done()
@@ -140,7 +140,7 @@ describe('Model with mongoose-eventful plugin', function() {
         })
       })
 
-      it('emits change:<VirtualFieldName> when dependent field is changed directly', function(done) {
+      it('emits changed:<VirtualFieldName> when dependent field is changed directly', function(done) {
         this.EventfulModel.on('changed:aVirtualField', function(doc) {
           expect(doc.aVirtualField).to.eql('changed value')
           done()
@@ -151,7 +151,7 @@ describe('Model with mongoose-eventful plugin', function() {
         })
       })
 
-      it('doesn\'t emit change:<VirtualFieldName> if the virtual field is not changed', function(done) {
+      it('doesn\'t emit changed:<VirtualFieldName> if the virtual field is not changed', function(done) {
         var callOnChanged = sinon.spy()
         this.EventfulModel.on('changed:aVirtualField', callOnChanged)
         this.EventfulModel.create({aField: 'initial value', aSecondField: 'initial value'}, function(err, doc) {
