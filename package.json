@@ -1,0 +1,37 @@
+{
+  "name": "mongoose-eventful",
+  "version": "0.1.0",
+  "description": "Mongoose plugin to emit events when documents are created, updated and when fields are changed",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha --recursive --reporter=spec --colors spec"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gabrielelana/mongoose-eventful"
+  },
+  "keywords": [
+    "mongoose",
+    "plugin",
+    "emit",
+    "raise",
+    "events",
+    "created",
+    "updated",
+    "changed"
+  ],
+  "author": "gabriele.lana@gmail.com",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/gabrielelana/mongoose-eventful/issues"
+  },
+  "homepage": "https://github.com/gabrielelana/mongoose-eventful",
+  "devDependencies": {
+    "mocha": "~1.15.1",
+    "mongoose": "~3.8.2",
+    "chai": "~1.8.1"
+  },
+  "dependencies": {
+    "lodash": "~2.4.1"
+  }
+}
