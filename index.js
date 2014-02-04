@@ -26,31 +26,31 @@ module.exports = function(schema, options) {
 
   schema.pre('save', function(next) {
     // the current model is already an event emitter
-    var fieldsThatHaveChanged = this.modifiedPaths(),
-        model = this.model(this.constructor.modelName),
-        alreadyEmitted = {},
-        index, virtualFieldPath
+    var doc = this,
+        fieldsThatHaveChanged = doc.modifiedPaths(),
+        model = doc.model(doc.constructor.modelName),
+        alreadyEmitted = {}
 
-    var shouldEmitChangedWhenCreated = (!this.isNew || (this.isNew && options.emitChangedOnCreated))
+    var shouldEmitChangedWhenCreated = (!doc.isNew || (doc.isNew && options.emitChangedOnCreated))
 
     if (fieldsThatHaveChanged && shouldEmitChangedWhenCreated) {
-      model.emit('changed', this)
+      model.emit('changed', doc)
 
-      for (index in fieldsThatHaveChanged) {
-        var eventKey = 'changed:' + fieldsThatHaveChanged[index]
+      fieldsThatHaveChanged.forEach(function(fieldThatHaveChanged) {
+        var eventKey = 'changed:' + fieldThatHaveChanged
         if (!alreadyEmitted[eventKey]) {
-          model.emit(eventKey, this)
+          model.emit(eventKey, doc)
           alreadyEmitted[eventKey] = true
         }
-      }
+      })
 
-      checkIfVirtualFieldsAreChanged(this, model)
+      checkIfVirtualFieldsAreChanged(doc, model)
     }
 
-    rememberInitialValueOfVirtualFields(this)
+    rememberInitialValueOfVirtualFields(doc)
 
-    if (this.isNew) {
-      model.emit('created', this)
+    if (doc.isNew) {
+      model.emit('created', doc)
     }
 
     next()
@@ -64,14 +64,13 @@ module.exports = function(schema, options) {
     if (options.emitChangedOnVirtualFields) {
       doc.$__.virtualFieldsPreviousValue = doc.$__.virtualFieldsPreviousValue || {}
 
-      for (var index in options.emitChangedOnVirtualFields) {
-        var virtualFieldPath = options.emitChangedOnVirtualFields[index]
+      options.emitChangedOnVirtualFields.forEach(function(virtualFieldPath) {
         var previousVirtualFieldValue = doc.$__.virtualFieldsPreviousValue[virtualFieldPath]
 
         if (!_.isEqual(previousVirtualFieldValue, doc.get(virtualFieldPath))) {
           model.emit('changed:' + virtualFieldPath, doc)
         }
-      }
+      })
     }
   }
 
@@ -79,10 +78,9 @@ module.exports = function(schema, options) {
     if (doc.isNew && options.emitChangedOnVirtualFields) {
       doc.$__.virtualFieldsPreviousValue = doc.$__.virtualFieldsPreviousValue || {}
 
-      for (var index in options.emitChangedOnVirtualFields) {
-        var virtualFieldPath = options.emitChangedOnVirtualFields[index]
+      options.emitChangedOnVirtualFields.forEach(function(virtualFieldPath) {
         doc.$__.virtualFieldsPreviousValue[virtualFieldPath] = doc.get(virtualFieldPath)
-      }
+      })
     }
   }
 }
