@@ -1,6 +1,6 @@
 {
   "name": "mongoose-eventful",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Mongoose plugin to emit events when documents are created or removed and when fields are changed",
   "main": "index.js",
   "scripts": {
