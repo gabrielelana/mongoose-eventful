@@ -116,6 +116,39 @@ describe('Model with mongoose-eventful plugin', function() {
     })
   })
 
+  describe('with a nested field', function() {
+    before(function() {
+      this.EventfulSchema = new mongoose.Schema({aNestedField: {aSimpleField: 'string'}}).plugin(eventful)
+      this.EventfulModel = mongoose.model('EventfulModelWithNestedField', this.EventfulSchema)
+    })
+
+    it('emits changed event when the field is changed', function(done) {
+      var self = this
+
+      self.EventfulModel.create({aNestedField: {aSimpleField: 'initial value'}}, function(err, doc) {
+        self.EventfulModel.on('changed', function(doc) {
+          expect(doc.aNestedField.aSimpleField).to.eql('changed value')
+          done()
+        })
+        doc.set('aNestedField.aSimpleField', 'changed value')
+        doc.save()
+      })
+    })
+
+    it('emits changed:<FieldName> when the field is changed', function(done) {
+      var self = this
+
+      self.EventfulModel.create({aNestedField: {aSimpleField: 'initial value'}}, function(err, doc) {
+        self.EventfulModel.on('changed:aNestedField.aSimpleField', function(doc) {
+          expect(doc.aNestedField.aSimpleField).to.eql('changed value')
+          done()
+        })
+        doc.set('aNestedField.aSimpleField', 'changed value')
+        doc.save()
+      })
+    })
+  })
+
   describe('with a virtual field', function() {
     describe('when emitChangedOnVirtualFields option is a list of virtual field paths', function() {
       before(function() {

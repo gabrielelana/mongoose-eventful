@@ -17,17 +17,21 @@ Model with mongoose-eventful plugin
     ✓ emits changed event when the field is changed 
     ✓ emits changed:<FieldName> when the field is changed 
     ✓ doesn't emit changed:<FieldName> when document is created 
+  with a nested field
+    ✓ emits changed event when the field is changed 
+    ✓ emits changed:<FieldName> when the field is changed 
   with a virtual field
     when emitChangedOnVirtualFields option is a list of virtual field paths
-      ✓ emits change:<VirtualFieldName> when the virtual field is changed 
-      ✓ emits change:<VirtualFieldName> when dependent field is changed directly 
-      ✓ doesn't emit change:<VirtualFieldName> if the virtual field is not changed 
+      ✓ emits changed:<VirtualFieldName> when the virtual field is changed 
+      ✓ emits changed:<VirtualFieldName> when dependent field is changed directly 
+      ✓ doesn't emit changed:<VirtualFieldName> if the virtual field is not changed 
+      ✓ doen't emit changed:<VirtualFieldName> if nothing changed 
+      ✓ doen't emit changed:<VirtualFieldName> if nothing changed after creation 
 ```
 
 # TODO
-* emits changed for fields in nested documents
-* emits changed for fields in arrays of nested documents
 * emits changed for array fields
+* emits changed for fields in arrays of nested documents
 * emits changed on virtual fields
   * detects changes on non primitive values of virtual field
   * emitChangedOnVirtualFields set to true means "for all virtual fields"
