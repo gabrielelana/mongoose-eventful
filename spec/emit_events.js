@@ -135,7 +135,7 @@ describe('Model with mongoose-eventful plugin', function() {
       })
     })
 
-    it('emits changed:<FieldName> when the field is changed', function(done) {
+    it('emits changed:<FieldName>.<FieldName> when the field is changed', function(done) {
       var self = this
 
       self.EventfulModel.create({aNestedField: {aSimpleField: 'initial value'}}, function(err, doc) {
