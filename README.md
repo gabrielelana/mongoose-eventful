@@ -1,6 +1,8 @@
 # What
 Mongoose plugin to emit events when documents are created or removed and when fields are changed
 
+[![Build Status](https://travis-ci.org/gabrielelana/mongoose-eventful.png?branch=master)](https://travis-ci.org/gabrielelana/mongoose-eventful)
+
 # Install
 `npm install mongoose-eventful`
 
