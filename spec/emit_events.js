@@ -2,11 +2,10 @@ var chai = require('chai').use(require('sinon-chai')),
     expect = chai.expect,
     sinon = require('sinon'),
     mongoose = require('mongoose'),
-    eventful = require('./../'),
-    _ = require('lodash')
+    eventful = require('./../')
+
 
 describe('Model with mongoose-eventful plugin', function() {
-  // TODO: get rid of this duplication, with mocha-mongoose?
   before(function(done) {
     mongoose.connect('mongodb://localhost/mongoose-eventful-test', function(err) {
       if (err) {
@@ -14,12 +13,10 @@ describe('Model with mongoose-eventful plugin', function() {
         console.error('MongoDB is running? Is it accessible by this application?')
         return done(err)
       }
-      // TODO: dropDatabase is quicker than dropping all the collections?
       mongoose.connection.db.dropDatabase(done)
     })
   })
 
-  // TODO: get rid of this duplication, with mocha-mongoose?
   after(function(done) {
     mongoose.connection.close(done)
   })
@@ -31,7 +28,7 @@ describe('Model with mongoose-eventful plugin', function() {
 
   it('emits created when document is created', function(done) {
     var callOnCreated = sinon.spy()
-    this.EventfulModel.on('created', callOnCreated)
+    this.EventfulModel.once('created', callOnCreated)
     this.EventfulModel.create({}, function() {
       expect(callOnCreated).to.have.been.called
       done()
@@ -40,7 +37,7 @@ describe('Model with mongoose-eventful plugin', function() {
 
   it('emits removed when document is removed', function(done) {
     var callOnRemoved = sinon.spy()
-    this.EventfulModel.on('removed', callOnRemoved)
+    this.EventfulModel.once('removed', callOnRemoved)
     this.EventfulModel.create({}, function(err, doc) {
       doc.remove(function(err) {
         expect(callOnRemoved).to.have.been.called
@@ -51,7 +48,7 @@ describe('Model with mongoose-eventful plugin', function() {
 
   it('doesn\'t emit changed when document is created', function(done) {
     var callOnChanged = sinon.spy()
-    this.EventfulModel.on('changed', callOnChanged)
+    this.EventfulModel.once('changed', callOnChanged)
     this.EventfulModel.create({}, function() {
       expect(callOnChanged).to.not.have.been.called
       done()
@@ -66,7 +63,7 @@ describe('Model with mongoose-eventful plugin', function() {
 
     it('emits changed when document is created', function(done) {
       var callOnChanged = sinon.spy()
-      this.EventfulModel.on('changed', callOnChanged)
+      this.EventfulModel.once('changed', callOnChanged)
       this.EventfulModel.create({}, function() {
         expect(callOnChanged).to.have.been.called
         done()
@@ -84,7 +81,7 @@ describe('Model with mongoose-eventful plugin', function() {
       var self = this
 
       self.EventfulModel.create({aSimpleField: 'initial value'}, function(err, doc) {
-        self.EventfulModel.on('changed', function(doc) {
+        self.EventfulModel.once('changed', function(doc) {
           expect(doc.aSimpleField).to.eql('changed value')
           done()
         })
@@ -97,7 +94,7 @@ describe('Model with mongoose-eventful plugin', function() {
       var self = this
 
       self.EventfulModel.create({aSimpleField: 'initial value'}, function(err, doc) {
-        self.EventfulModel.on('changed:aSimpleField', function(doc) {
+        self.EventfulModel.once('changed:aSimpleField', function(doc) {
           expect(doc.aSimpleField).to.eql('changed value')
           done()
         })
@@ -108,7 +105,7 @@ describe('Model with mongoose-eventful plugin', function() {
 
     it('doesn\'t emit changed:<FieldName> when document is created', function(done) {
       var callOnChanged = sinon.spy()
-      this.EventfulModel.on('changed:aSimpleField', callOnChanged)
+      this.EventfulModel.once('changed:aSimpleField', callOnChanged)
       this.EventfulModel.create({aSimpleField: 'initial value'}, function() {
         expect(callOnChanged).to.not.have.been.called
         done()
@@ -126,7 +123,7 @@ describe('Model with mongoose-eventful plugin', function() {
       var self = this
 
       self.EventfulModel.create({aNestedField: {aSimpleField: 'initial value'}}, function(err, doc) {
-        self.EventfulModel.on('changed', function(doc) {
+        self.EventfulModel.once('changed', function(doc) {
           expect(doc.aNestedField.aSimpleField).to.eql('changed value')
           done()
         })
@@ -139,7 +136,7 @@ describe('Model with mongoose-eventful plugin', function() {
       var self = this
 
       self.EventfulModel.create({aNestedField: {aSimpleField: 'initial value'}}, function(err, doc) {
-        self.EventfulModel.on('changed:aNestedField.aSimpleField', function(doc) {
+        self.EventfulModel.once('changed:aNestedField.aSimpleField', function(doc) {
           expect(doc.aNestedField.aSimpleField).to.eql('changed value')
           done()
         })
@@ -163,7 +160,7 @@ describe('Model with mongoose-eventful plugin', function() {
       })
 
       it('emits changed:<VirtualFieldName> when the virtual field is changed', function(done) {
-        this.EventfulModel.on('changed:aVirtualField', function(doc) {
+        this.EventfulModel.once('changed:aVirtualField', function(doc) {
           expect(doc.aVirtualField).to.eql('changed value')
           done()
         })
@@ -174,7 +171,7 @@ describe('Model with mongoose-eventful plugin', function() {
       })
 
       it('emits changed:<VirtualFieldName> when dependent field is changed directly', function(done) {
-        this.EventfulModel.on('changed:aVirtualField', function(doc) {
+        this.EventfulModel.once('changed:aVirtualField', function(doc) {
           expect(doc.aVirtualField).to.eql('changed value')
           done()
         })
@@ -186,7 +183,7 @@ describe('Model with mongoose-eventful plugin', function() {
 
       it('doesn\'t emit changed:<VirtualFieldName> if the virtual field is not changed', function(done) {
         var callOnChanged = sinon.spy()
-        this.EventfulModel.on('changed:aVirtualField', callOnChanged)
+        this.EventfulModel.once('changed:aVirtualField', callOnChanged)
         this.EventfulModel.create({aField: 'initial value', aSecondField: 'initial value'}, function(err, doc) {
           doc.set('aSecondField', 'changed value')
           doc.save(function() {
@@ -198,7 +195,7 @@ describe('Model with mongoose-eventful plugin', function() {
 
       it('doen\'t emit changed:<VirtualFieldName> if nothing changed', function(done) {
         var callOnChanged = sinon.spy()
-        this.EventfulModel.on('changed:aVirtualField', callOnChanged)
+        this.EventfulModel.once('changed:aVirtualField', callOnChanged)
         this.EventfulModel.create({}, function(err, doc) {
           doc.save(function() {
             expect(callOnChanged).to.not.have.been.called
@@ -209,7 +206,7 @@ describe('Model with mongoose-eventful plugin', function() {
 
       it('doen\'t emit changed:<VirtualFieldName> if nothing changed after creation', function(done) {
         var callOnChanged = sinon.spy()
-        this.EventfulModel.on('changed:aVirtualField', callOnChanged)
+        this.EventfulModel.once('changed:aVirtualField', callOnChanged)
         this.EventfulModel.create({aField: 'initial value', aSecondField: 'initial value'}, function(err, doc) {
           doc.save(function() {
             expect(callOnChanged).to.not.have.been.called
@@ -218,11 +215,5 @@ describe('Model with mongoose-eventful plugin', function() {
         })
       })
     })
-  })
-
-  afterEach(function() {
-    this.EventfulModel.removeAllListeners('changed')
-    this.EventfulModel.removeAllListeners('changed:aSimpleField')
-    this.EventfulModel.removeAllListeners('changed:aVirtualField')
   })
 })
