@@ -33,17 +33,17 @@ Model with mongoose-eventful plugin
 
 # TODO
 * emits changed for array fields
-  * emit changed:fieldName
+  * emit `changed:fieldName`
 * emits changed for fields in arrays of nested documents
-  * emit changed:fieldName
+  * emit `changed:fieldName`
     * give all document, nested document changed, index of nested document
-  * emit changed:fieldName.nestedFieldName
+  * emit `changed:fieldName.nestedFieldName`
     * give nested document changed, index of nested document, all document
-  * emit changed:fieldName.N.nestedFieldName
+  * emit `changed:fieldName.N.nestedFieldName`
     * give nested document changed, index of nested document, all document
   * what about added nested documents?
   * what about removed nested documents?
 * emits changed on virtual fields
   * detects changes on non primitive values of virtual field
-  * emitChangedOnVirtualFields set to true means "for all virtual fields"
-  * emitChangedOnVirtualFields set to {virtualFieldPath: listOfFieldsItDependsOn}
+  * `emitChangedOnVirtualFields` set to true means "for all virtual fields"
+  * `emitChangedOnVirtualFields` set to `{virtualFieldPath: listOfFieldsItDependsOn}`
