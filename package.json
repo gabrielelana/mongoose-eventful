@@ -27,11 +27,11 @@
   },
   "homepage": "https://github.com/gabrielelana/mongoose-eventful",
   "devDependencies": {
-    "mocha": "~1.15.1",
-    "mongoose": "~3.8.2",
-    "chai": "~1.8.1",
-    "sinon": "~1.8.1",
-    "sinon-chai": "~2.5.0"
+    "mocha": "~2.0.1",
+    "mongoose": "~3.8.19",
+    "chai": "~1.10.0",
+    "sinon": "~1.12.1",
+    "sinon-chai": "~2.6.0"
   },
   "dependencies": {
     "lodash": "~2.4.1"
