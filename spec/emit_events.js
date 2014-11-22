@@ -46,7 +46,7 @@ describe('Model with mongoose-eventful plugin', function() {
     })
   })
 
-  it('doesn\'t emit changed when document is created', function(done) {
+  it('does not emit changed when document is created', function(done) {
     var callOnChanged = sinon.spy()
     this.EventfulModel.once('changed', callOnChanged)
     this.EventfulModel.create({}, function() {
@@ -103,7 +103,7 @@ describe('Model with mongoose-eventful plugin', function() {
       })
     })
 
-    it('doesn\'t emit changed:<FieldName> when document is created', function(done) {
+    it('does not emit changed:<FieldName> when document is created', function(done) {
       var callOnChanged = sinon.spy()
       this.EventfulModel.once('changed:aSimpleField', callOnChanged)
       this.EventfulModel.create({aSimpleField: 'initial value'}, function() {
@@ -181,7 +181,7 @@ describe('Model with mongoose-eventful plugin', function() {
         })
       })
 
-      it('doesn\'t emit changed:<VirtualFieldName> if the virtual field is not changed', function(done) {
+      it('does not emit changed:<VirtualFieldName> if the virtual field is not changed', function(done) {
         var callOnChanged = sinon.spy()
         this.EventfulModel.once('changed:aVirtualField', callOnChanged)
         this.EventfulModel.create({aField: 'initial value', aSecondField: 'initial value'}, function(err, doc) {
@@ -193,7 +193,7 @@ describe('Model with mongoose-eventful plugin', function() {
         })
       })
 
-      it('doen\'t emit changed:<VirtualFieldName> if nothing changed', function(done) {
+      it('does not emit changed:<VirtualFieldName> if nothing changed', function(done) {
         var callOnChanged = sinon.spy()
         this.EventfulModel.once('changed:aVirtualField', callOnChanged)
         this.EventfulModel.create({}, function(err, doc) {
@@ -204,7 +204,7 @@ describe('Model with mongoose-eventful plugin', function() {
         })
       })
 
-      it('doen\'t emit changed:<VirtualFieldName> if nothing changed after creation', function(done) {
+      it('does not emit changed:<VirtualFieldName> if nothing changed after creation', function(done) {
         var callOnChanged = sinon.spy()
         this.EventfulModel.once('changed:aVirtualField', callOnChanged)
         this.EventfulModel.create({aField: 'initial value', aSecondField: 'initial value'}, function(err, doc) {
