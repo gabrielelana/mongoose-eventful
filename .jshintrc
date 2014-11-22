@@ -22,7 +22,7 @@
   "latedef": false,
   "immed": true,
   "undef": true,
-  "unused": false,
+  "unused": "var",
   "trailing": true,
   "funcscope": true,
   "camelcase": true,
