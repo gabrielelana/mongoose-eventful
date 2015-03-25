@@ -55,8 +55,10 @@ module.exports = function(schema, options) {
     next()
   })
 
-  schema.post('remove', function() {
-    this.model(this.constructor.modelName).emit('removed', this)
+  schema.post('remove', function(doc) {
+    // with mongoose 4.0.0 doc is passed in as an argument, in 3.8.x it's 'this'
+    var document = doc.constructor !== undefined ? doc : this;
+    document.model(document.constructor.modelName).emit('removed', document)
   });
 
   function checkIfVirtualFieldsHaveChanged(doc, model) {
